@@ -51,7 +51,7 @@ Create some plots and some summary tables to give us a sense of school id and it
 ```{r}
 
 
-# how many distinct schools are there? (pollev.com/sta)
+# how many distinct schools are there? (pollev.com/sta) - adapt the above code to count the number of schools.
 
  
 ```
@@ -63,6 +63,7 @@ Create some plots and some summary tables to give us a sense of ses variable and
 ```{r}
 
 # what is the correlation between ses and math scores for all observations (i.e., not "accounting" for school)?
+
 
 ```
 
@@ -143,18 +144,20 @@ ggplot(data = hsb_data, aes(y=mathach, x=as.factor(schtype))) +
 
 Let's try to look at student math scores based solely on school id as a level 2 variable.
 
-So we are estimating: $$y_{ij} = \beta_0 + v_{0j} + \epsilon_{ij} $$
-where $y$ is math scores. 
+So we are estimating: $$Y_{ij} = \beta_0 + v_{0j} + \epsilon_{ij} $$
+where $Y$ is math scores. 
 
 This is like a baseline model.
 
 ```{r}
-model1 <- lmer(mathach ~ 1 + (1|schid), REML=FALSE, data=hsb)
+model1 <- lmer(mathach ~ 1 + (1|schid), REML=FALSE, data=hsb_data)
 
 # REML - Restricted Maximum Likelihood Estimation
 
 summary(model1)
 ```
+
+
 
 Below will give you the confidence intervals of parameters estimated by the model.
 ```{r}
@@ -165,7 +168,7 @@ confint(model1)
 Recall, there is an alternative way to write the model.
 
 ```{r}
-alt_model1 <- lmer(mathach ~ (1|schid), REML=FALSE, data=hsb)
+alt_model1 <- lmer(mathach ~ (1|schid), REML=FALSE, data=hsb_data)
 ```
 
 We can even make a prediction. What is the predicted math score of a student who went to school 1224?
@@ -177,7 +180,7 @@ We can even make a prediction. What is the predicted math score of a student who
 
 ### With Level I Predictors
 
-Let's predict math scores with SES as a level I predictor still using a random intercept model, with school as the level II variable. So we are estimating: $$y_{ij} = \beta_0 + \beta_1 x_{ij} + v_{j} + \epsilon_{ij} $$
+Let's predict math scores with SES as a level I predictor still using a random intercept model, with school as the level II variable. So we are estimating: $$Y_{ij} = \beta_0 + \beta_1 X_{ij} + v_{0j} + \epsilon_{ij} $$
 where $y$ is math scores and $x$ is the SES.
 
 ```{r}
@@ -186,6 +189,8 @@ alt_model2 <- lmer(mathach ~ ses+(1|schid), REML=FALSE, data=hsb)
 
 summary(model2)
 ```
+
+
 
 
 What is the predicted math score of a female student with SES of 0.4 who went to school 6816? Go to pollev.com/sta to answer this.
@@ -199,7 +204,7 @@ What is the predicted math score of a female student with SES of 0.4 who went to
 
 Let's assume that we want to model the SES slope based on the school cluster. 
 
-$$y_{ij} = \beta_0 + \beta_1 x_{ij} + v_{0j} + w_jx_{ij} + \epsilon_{ij} $$
+$$Y_{ij} = \beta_0 + \beta_1 X_{ij} + v_{0j} + w_jX_{ij} + \epsilon_{ij} $$
 where $y$ is math scores and $x$ is the SES.
 
 ```{r}
@@ -207,6 +212,8 @@ model3 <- lmer(mathach ~ ses+(ses|schid), REML=FALSE, data=hsb)
 
 summary(model3)
 ```
+
+
 
 
 
